@@ -663,10 +663,10 @@ int rtnl_neigh_add(struct nl_handle *handle, struct rtnl_neigh *tmpl, int flags)
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
@@ -719,10 +719,10 @@ int rtnl_neigh_delete(struct nl_handle *handle, struct rtnl_neigh *neigh,
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
@@ -778,10 +778,10 @@ int rtnl_neigh_change(struct nl_handle *handle, struct rtnl_neigh *neigh,
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 

@@ -1061,10 +1061,10 @@ int rtnl_link_change(struct nl_handle *handle, struct rtnl_link *old,
 		return nl_errno(ENOMEM);
 	
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 

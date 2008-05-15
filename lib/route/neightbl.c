@@ -583,10 +583,10 @@ int rtnl_neightbl_change(struct nl_handle *handle, struct rtnl_neightbl *old,
 	
 	msg = rtnl_neightbl_build_change_request(old, tmpl);
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 

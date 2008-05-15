@@ -588,10 +588,10 @@ int rtnl_rule_add(struct nl_handle *handle, struct rtnl_rule *tmpl, int flags)
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
@@ -643,10 +643,10 @@ int rtnl_rule_delete(struct nl_handle *handle, struct rtnl_rule *rule,
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 

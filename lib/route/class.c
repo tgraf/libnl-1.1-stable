@@ -156,10 +156,10 @@ int rtnl_class_add(struct nl_handle *handle, struct rtnl_class *class,
 		return nl_errno(ENOMEM);
 
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 

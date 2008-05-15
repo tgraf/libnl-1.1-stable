@@ -169,10 +169,10 @@ int rtnl_cls_add(struct nl_handle *handle, struct rtnl_cls *cls, int flags)
 		return nl_errno(ENOMEM);
 	
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
@@ -216,10 +216,10 @@ int rtnl_cls_change(struct nl_handle *handle, struct rtnl_cls *cls,
 		return nl_errno(ENOMEM);
 	
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
@@ -263,10 +263,10 @@ int rtnl_cls_delete(struct nl_handle *handle, struct rtnl_cls *cls, int flags)
 		return nl_errno(ENOMEM);
 	
 	err = nl_send_auto_complete(handle, msg);
+	nlmsg_free(msg);
 	if (err < 0)
 		return err;
 
-	nlmsg_free(msg);
 	return nl_wait_for_ack(handle);
 }
 
