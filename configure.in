@@ -39,6 +39,13 @@ AC_CHECK_LIB(m, pow,
     exit
 ])
 
+# libpthread
+AC_CHECK_LIB([pthread], [pthread_mutex_lock],
+[
+  LIBPTHREAD="-lpthread"
+  PTHREAD="Yes"
+], AC_MSG_ERROR([libpthread is required]))
+
 #####################################################################
 ##
 ## verbose error strings
@@ -57,7 +64,7 @@ AC_ARG_ENABLE(verbose-errors,
 ##
 #####################################################################
 COMPILE_LIBNL="Yes "
-LIBNL_LIB="$LIBM"
+LIBNL_LIB="$LIBM $LIBPTHREAD"
 
 AC_SUBST(LIBNL_LIB)
 
