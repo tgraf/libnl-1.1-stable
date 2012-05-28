@@ -476,7 +476,7 @@ int nl_recv(struct nl_handle *handle, struct sockaddr_nl *nla,
 	struct cmsghdr *cmsg;
 
 	if (handle->h_flags & NL_MSG_PEEK)
-		flags |= MSG_PEEK;
+		flags |= MSG_PEEK | MSG_TRUNC;
 
 	if (page_size == 0)
 		page_size = getpagesize();
@@ -507,16 +507,17 @@ retry:
 		}
 	}
 
-	if (iov.iov_len < n ||
-	    msg.msg_flags & MSG_TRUNC) {
-		/* Provided buffer is not long enough, enlarge it
-		 * and try again. */
-		iov.iov_len *= 2;
-		iov.iov_base = *buf = realloc(*buf, iov.iov_len);
-		goto retry;
-	} else if (msg.msg_flags & MSG_CTRUNC) {
+	if (msg.msg_flags & MSG_CTRUNC) {
 		msg.msg_controllen *= 2;
 		msg.msg_control = realloc(msg.msg_control, msg.msg_controllen);
+		goto retry;
+	} else if (iov.iov_len < n || msg.msg_flags & MSG_TRUNC) {
+		/* Provided buffer is not long enough, enlarge it
+		 * to size of n (which should be total length of the message)
+		 * and try again. */
+		iov.iov_len = n;
+		iov.iov_base = *buf = realloc(*buf, iov.iov_len);
+		flags = 0;
 		goto retry;
 	} else if (flags != 0) {
 		/* Buffer is big enough, do the actual reading */
