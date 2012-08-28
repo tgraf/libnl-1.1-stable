@@ -43,8 +43,8 @@ extern int	nl_get_errno(void);
 extern void	nl_perror(const char *);
 
 /* unit pretty-printing */
-extern double	nl_cancel_down_bytes(unsigned long long, char **);
-extern double	nl_cancel_down_bits(unsigned long long, char **);
+extern double	nl_cancel_down_bytes(unsigned long long, const char **);
+extern double	nl_cancel_down_bits(unsigned long long, const char **);
 extern double	nl_cancel_down_us(uint32_t, char **);
 
 /* generic unit translations */

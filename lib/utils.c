@@ -182,10 +182,11 @@ void nl_perror(const char *s)
  *
  * Cancels down a byte counter until it reaches a reasonable
  * unit. The chosen unit is assigned to \a unit.
+ * This function assume 1024 bytes in one kilobyte
  * 
  * @return The cancelled down byte counter in the new unit.
  */
-double nl_cancel_down_bytes(unsigned long long l, char **unit)
+double nl_cancel_down_bytes(unsigned long long l, const char **unit)
 {
 	if (l >= 1099511627776LL) {
 		*unit = "TiB";
@@ -210,30 +211,36 @@ double nl_cancel_down_bytes(unsigned long long l, char **unit)
  * @arg	l		bit counter
  * @arg unit		destination unit pointer
  *
- * Cancels downa bit counter until it reaches a reasonable
+ * Cancels down bit counter until it reaches a reasonable
  * unit. The chosen unit is assigned to \a unit.
+ * This function assume 1000 bits in one kilobit
  *
  * @return The cancelled down bit counter in the new unit.
  */
-double nl_cancel_down_bits(unsigned long long l, char **unit)
+double nl_cancel_down_bits(unsigned long long l, const char **unit)
 {
-	if (l >= 1099511627776ULL) {
+	if (l >= 1000000000000ULL) {
 		*unit = "Tbit";
-		return ((double) l) / 1099511627776ULL;
-	} else if (l >= 1073741824) {
-		*unit = "Gbit";
-		return ((double) l) / 1073741824;
-	} else if (l >= 1048576) {
-		*unit = "Mbit";
-		return ((double) l) / 1048576;
-	} else if (l >= 1024) {
-		*unit = "Kbit";
-		return ((double) l) / 1024;
-	} else {
-		*unit = "bit";
-		return (double) l;
+		return ((double) l) / 1000000000000ULL;
 	}
-		
+
+	if (l >= 1000000000) {
+		*unit = "Gbit";
+		return ((double) l) / 1000000000;
+	}
+
+	if (l >= 1000000) {
+		*unit = "Mbit";
+		return ((double) l) / 1000000;
+	}
+
+	if (l >= 1000) {
+		*unit = "Kbit";
+		return ((double) l) / 1000;
+	}
+
+	*unit = "bit";
+	return (double) l;
 }
 
 /**
@@ -278,6 +285,9 @@ double nl_cancel_down_us(uint32_t l, char **unit)
  *  - b,kb/k,m/mb,gb/g for bytes
  *  - bit,kbit/mbit/gbit
  *
+ * This function assume 1000 bits in one kilobit and
+ * 1024 bytes in one kilobyte
+ *
  * @return The number of bytes or -1 if the string is unparseable
  */
 long nl_size2int(const char *str)
@@ -293,13 +303,13 @@ long nl_size2int(const char *str)
 		else if (!strcasecmp(p, "gb") || !strcasecmp(p, "g"))
 			l *= 1024*1024*1024;
 		else if (!strcasecmp(p, "gbit"))
-			l *= 1024*1024*1024/8;
+			l *= 1000000000L/8;
 		else if (!strcasecmp(p, "mb") || !strcasecmp(p, "m"))
 			l *= 1024*1024;
 		else if (!strcasecmp(p, "mbit"))
-			l *= 1024*1024/8;
+			l *= 1000000/8;
 		else if (!strcasecmp(p, "kbit"))
-			l *= 1024/8;
+			l *= 1000/8;
 		else if (!strcasecmp(p, "bit"))
 			l /= 8;
 		else if (strcasecmp(p, "b") != 0)
