@@ -186,7 +186,7 @@ void nl_perror(const char *s)
  * 
  * @return The cancelled down byte counter in the new unit.
  */
-double nl_cancel_down_bytes(unsigned long long l, const char **unit)
+double nl_cancel_down_bytes(unsigned long long l, char **unit)
 {
 	if (l >= 1099511627776LL) {
 		*unit = "TiB";
@@ -217,7 +217,7 @@ double nl_cancel_down_bytes(unsigned long long l, const char **unit)
  *
  * @return The cancelled down bit counter in the new unit.
  */
-double nl_cancel_down_bits(unsigned long long l, const char **unit)
+double nl_cancel_down_bits(unsigned long long l, char **unit)
 {
 	if (l >= 1000000000000ULL) {
 		*unit = "Tbit";
