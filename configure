@@ -619,6 +619,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_verbose_errors
+enable_pthreads
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1240,6 +1241,7 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-verbose-errors enable verbose errors (debugging)
+  --disable-pthreads      Disable pthreads support
 
 Some influential environment variables:
   CC          C compiler command
@@ -2866,8 +2868,40 @@ else
 fi
 
 
+#####################################################################
+##
+## verbose error strings
+##
+#####################################################################
+# Check whether --enable-verbose-errors was given.
+if test "${enable_verbose_errors+set}" = set; then :
+  enableval=$enable_verbose_errors;
+	if test x$enableval = xyes; then
+
+cat >>confdefs.h <<_ACEOF
+#define VERBOSE_ERRORS "1"
+_ACEOF
+
+	fi
+
+fi
+
+
+# Check whether --enable-pthreads was given.
+if test "${enable_pthreads+set}" = set; then :
+  enableval=$enable_pthreads; enable_pthreads="$enableval"
+else
+  enable_pthreads="yes"
+fi
+
+
+if test "x$enable_pthreads" = "xno"; then
+
+$as_echo "#define DISABLE_PTHREADS 1" >>confdefs.h
+
+else
 # libpthread
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_mutex_lock in -lpthread" >&5
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_mutex_lock in -lpthread" >&5
 $as_echo_n "checking for pthread_mutex_lock in -lpthread... " >&6; }
 if ${ac_cv_lib_pthread_pthread_mutex_lock+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -2905,32 +2939,14 @@ fi
 $as_echo "$ac_cv_lib_pthread_pthread_mutex_lock" >&6; }
 if test "x$ac_cv_lib_pthread_pthread_mutex_lock" = xyes; then :
 
-  LIBPTHREAD="-lpthread"
-  PTHREAD="Yes"
+	  LIBPTHREAD="-lpthread"
+	  PTHREAD="Yes"
 
 else
   as_fn_error $? "libpthread is required" "$LINENO" 5
 fi
 
-
-#####################################################################
-##
-## verbose error strings
-##
-#####################################################################
-# Check whether --enable-verbose-errors was given.
-if test "${enable_verbose_errors+set}" = set; then :
-  enableval=$enable_verbose_errors;
-	if test x$enableval = xyes; then
-
-cat >>confdefs.h <<_ACEOF
-#define VERBOSE_ERRORS "1"
-_ACEOF
-
-	fi
-
 fi
-
 
 #####################################################################
 ##

@@ -39,13 +39,6 @@ AC_CHECK_LIB(m, pow,
     exit
 ])
 
-# libpthread
-AC_CHECK_LIB([pthread], [pthread_mutex_lock],
-[
-  LIBPTHREAD="-lpthread"
-  PTHREAD="Yes"
-], AC_MSG_ERROR([libpthread is required]))
-
 #####################################################################
 ##
 ## verbose error strings
@@ -57,6 +50,21 @@ AC_ARG_ENABLE(verbose-errors,
 		AC_DEFINE_UNQUOTED(VERBOSE_ERRORS,"1",[verbose errors])
 	fi
 ])
+
+AC_ARG_ENABLE([pthreads],
+	AS_HELP_STRING([--disable-pthreads], [Disable pthreads support]),
+	[enable_pthreads="$enableval"], [enable_pthreads="yes"])
+
+if test "x$enable_pthreads" = "xno"; then
+    AC_DEFINE([DISABLE_PTHREADS], [1], [Define to 1 to disable pthreads])
+else
+# libpthread
+	AC_CHECK_LIB([pthread], [pthread_mutex_lock],
+	[
+	  LIBPTHREAD="-lpthread"
+	  PTHREAD="Yes"
+	], AC_MSG_ERROR([libpthread is required]))
+fi
 
 #####################################################################
 ##
