@@ -46,6 +46,10 @@
 #include <linux/gen_stats.h>
 #include <linux/ip_mp_alg.h>
 
+#ifndef DISABLE_PTHREADS
+#include <pthread.h>
+#endif
+
 #include <netlink/netlink.h>
 #include <netlink/handlers.h>
 #include <netlink/cache.h>
@@ -398,5 +402,51 @@ static inline char *nl_cache_name(struct nl_cache *cache)
 		{ id, NL_ACT_UNSPEC, name }, \
 		END_OF_MSGTYPES_LIST, \
 	}
+
+#ifndef DISABLE_PTHREADS
+#define NL_LOCK(NAME) pthread_mutex_t (NAME) = PTHREAD_MUTEX_INITIALIZER
+#define NL_RW_LOCK(NAME) pthread_rwlock_t (NAME) = PTHREAD_RWLOCK_INITIALIZER
+
+static inline void nl_lock(pthread_mutex_t *lock)
+{
+	pthread_mutex_lock(lock);
+}
+
+static inline void nl_unlock(pthread_mutex_t *lock)
+{
+	pthread_mutex_unlock(lock);
+}
+
+static inline void nl_read_lock(pthread_rwlock_t *lock)
+{
+	pthread_rwlock_rdlock(lock);
+}
+
+static inline void nl_read_unlock(pthread_rwlock_t *lock)
+{
+	pthread_rwlock_unlock(lock);
+}
+
+static inline void nl_write_lock(pthread_rwlock_t *lock)
+{
+	pthread_rwlock_wrlock(lock);
+}
+
+static inline void nl_write_unlock(pthread_rwlock_t *lock)
+{
+	pthread_rwlock_unlock(lock);
+}
+
+#else
+#define NL_LOCK(NAME) int __unused_lock_ ##NAME __attribute__((unused))
+#define NL_RW_LOCK(NAME) int __unused_lock_ ##NAME __attribute__((unused))
+
+#define nl_lock(LOCK) do { } while(0)
+#define nl_unlock(LOCK) do { } while(0)
+#define nl_read_lock(LOCK) do { } while(0)
+#define nl_read_unlock(LOCK) do { } while(0)
+#define nl_write_lock(LOCK) do { } while(0)
+#define nl_write_unlock(LOCK) do { } while(0)
+#endif
 
 #endif
