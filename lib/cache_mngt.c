@@ -193,8 +193,10 @@ void nl_cache_mngt_provide(struct nl_cache *cache)
 	ops = cache_ops_lookup_for_obj(cache->c_ops->co_obj_ops);
 	if (!ops)
 		BUG();
-	else
+	else {
+		nl_cache_get(cache);
 		ops->co_major_cache = cache;
+	}
 }
 
 /**
@@ -212,8 +214,10 @@ void nl_cache_mngt_unprovide(struct nl_cache *cache)
 	ops = cache_ops_lookup_for_obj(cache->c_ops->co_obj_ops);
 	if (!ops)
 		BUG();
-	else if (ops->co_major_cache == cache)
+	else if (ops->co_major_cache == cache) {
+		nl_cache_free(ops->co_major_cache);
 		ops->co_major_cache = NULL;
+	}
 }
 
 /**
