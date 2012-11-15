@@ -75,6 +75,7 @@ struct nl_cache
 	int			c_nitems;
 	int                     c_iarg1;
 	int                     c_iarg2;
+	int			c_refcnt;
 	struct nl_cache_ops *   c_ops;
 };
 
