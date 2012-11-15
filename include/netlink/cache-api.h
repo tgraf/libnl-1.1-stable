@@ -166,6 +166,10 @@ struct nl_cache_ops
 
 	int			co_hdrsize;
 	int			co_protocol;
+
+	/** Reference counter */
+	unsigned int		co_refcnt;
+
 	struct nl_af_group *	co_groups;
 	
 	/**
@@ -189,6 +193,9 @@ struct nl_cache_ops
 	struct genl_ops *	co_genl;
 	struct nl_msgtype	co_msgtypes[];
 };
+
+extern void	nl_cache_ops_get(struct nl_cache_ops *);
+extern void	nl_cache_ops_put(struct nl_cache_ops *);
 
 /** @} */
 
