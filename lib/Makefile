@@ -65,7 +65,7 @@ distclean:
 
 install:
 	mkdir -p $(DESTDIR)$(libdir)/
-	install -m 0644 $(OUT_SLIB) $(DESTDIR)$(libdir)
+	install -m 0755 $(OUT_SLIB) $(DESTDIR)$(libdir)
 	rm -f $(DESTDIR)$(libdir)/$(LN1_SLIB)
 	$(LN) -s $(OUT_SLIB) $(DESTDIR)$(libdir)/$(LN1_SLIB)
 	rm -f $(DESTDIR)$(libdir)/$(LN_SLIB)
