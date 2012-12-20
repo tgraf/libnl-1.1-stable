@@ -46,8 +46,8 @@ static void __init nl_debug_init(void)
  * @{
  */
 
-static char *errbuf;
-static int nlerrno;
+static __thread char *errbuf;
+static __thread int nlerrno;
 
 /** @cond SKIP */
 int __nl_error(int err, const char *file, unsigned int line, const char *func,
