@@ -1,0 +1,6 @@
+autom4te.cache
+libnl-1.pc
+Makefile.opts
+config.log
+config.status
+*.d
