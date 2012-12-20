@@ -34,6 +34,7 @@ DEPS     := $(CIN:%.c=%.d)
 OBJ      := $(CIN:%.c=%.o)
 CFLAGS   += -fPIC
 OUT_SLIB := $(PACKAGE_NAME).so.$(PACKAGE_VERSION)
+OUT_AR   := $(PACKAGE_NAME).a
 LN_SLIB  := $(PACKAGE_NAME).so
 LN1_SLIB := $(LN_SLIB).1
 
@@ -44,7 +45,8 @@ export
 
 all:
 	@echo "  MAKE $(OUT_SLIB)"; \
-	$(MAKE) $(OUT_SLIB)
+	$(MAKE) $(OUT_SLIB); \
+	$(MAKE) $(OUT_AR)
 
 $(OUT_SLIB): ../Makefile.opts $(OBJ)
 	@echo "  LD $(OUT_SLIB)"; \
@@ -53,6 +55,10 @@ $(OUT_SLIB): ../Makefile.opts $(OBJ)
 	rm -f $(LN1_SLIB) ; $(LN) -s $(OUT_SLIB) $(LN1_SLIB)
 	@echo "  LN $(LN1_SLIB) $(LN_SLIB)"; \
 	rm -f $(LN_SLIB) ; $(LN) -s $(LN1_SLIB) $(LN_SLIB)
+
+$(OUT_AR):  ../Makefile.opts $(OBJ)
+	@echo "  AR $(OUT_AR)"; \
+	$(AR) crus $(OUT_AR) $(OBJ)
 
 clean:
 	@echo "  CLEAN lib"; \
@@ -70,6 +76,7 @@ install:
 	$(LN) -s $(OUT_SLIB) $(DESTDIR)$(libdir)/$(LN1_SLIB)
 	rm -f $(DESTDIR)$(libdir)/$(LN_SLIB)
 	$(LN) -s $(LN1_SLIB) $(DESTDIR)$(libdir)/$(LN_SLIB)
+	install -m 0644 $(OUT_AR) $(DESTDIR)$(libdir)
 
 $(DEPS): ../Makefile.opts
 
