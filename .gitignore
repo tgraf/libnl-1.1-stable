@@ -7,3 +7,4 @@ config.status
 *.o
 *.so
 *.so.*
+cscope.*
