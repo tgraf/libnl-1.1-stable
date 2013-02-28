@@ -124,7 +124,7 @@ errout:
 static int result_dump_brief(struct nl_object *obj, struct nl_dump_params *p)
 {
 	struct flnl_result *res = (struct flnl_result *) obj;
-	char buf[128];
+	char buf[256];
 	int line = 1;
 
 	dp_dump(p, "table %s prefixlen %u next-hop-selector %u\n",
@@ -134,7 +134,7 @@ static int result_dump_brief(struct nl_object *obj, struct nl_dump_params *p)
 		     nl_rtntype2str(res->fr_type, buf, sizeof(buf)));
 	dp_dump(p, "scope %s error %s (%d)\n",
 		rtnl_scope2str(res->fr_scope, buf, sizeof(buf)),
-		strerror(-res->fr_error), res->fr_error);
+		strerror_r(-res->fr_error, buf, sizeof(buf)), res->fr_error);
 
 	return line;
 }

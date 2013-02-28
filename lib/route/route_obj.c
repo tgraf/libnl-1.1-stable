@@ -193,7 +193,7 @@ static int route_dump_full(struct nl_object *a, struct nl_dump_params *p)
 {
 	struct rtnl_route *r = (struct rtnl_route *) a;
 	struct nl_cache *link_cache;
-	char buf[128];
+	char buf[256];
 	int i, line;
 
 	link_cache = nl_cache_mngt_require("route/link");
@@ -274,7 +274,7 @@ static int route_dump_full(struct nl_object *a, struct nl_dump_params *p)
 		if ((r->ce_mask & ROUTE_ATTR_CACHEINFO) &&
 		    r->rt_cacheinfo.rtci_error)
 			dp_dump(p, "error %d (%s) ", r->rt_cacheinfo.rtci_error,
-				strerror(-r->rt_cacheinfo.rtci_error));
+				strerror_r(-r->rt_cacheinfo.rtci_error, buf, sizeof(buf)));
 
 		dp_dump(p, "\n");
 	}
