@@ -167,9 +167,6 @@ struct nl_cache_ops
 	int			co_hdrsize;
 	int			co_protocol;
 
-	/** Reference counter */
-	unsigned int		co_refcnt;
-
 	struct nl_af_group *	co_groups;
 	
 	/**
@@ -191,6 +188,19 @@ struct nl_cache_ops
 	struct nl_cache_ops *co_next;
 	struct nl_cache *co_major_cache;
 	struct genl_ops *	co_genl;
+
+	/** Reference counter */
+	unsigned int		co_refcnt;
+
+	void		      (*unused1)(void);
+	void		      (*unused2)(void);
+	void		      (*unused3)(void);
+	void		      (*unused4)(void);
+	void		      (*unused5)(void);
+	void		      (*unused6)(void);
+	void		      (*unused7)(void);
+	void		      (*unused8)(void);
+
 	struct nl_msgtype	co_msgtypes[];
 };
 
