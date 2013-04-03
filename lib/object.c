@@ -132,7 +132,12 @@ struct nl_object *nl_object_clone(struct nl_object *obj)
  */
 void nl_object_free(struct nl_object *obj)
 {
-	struct nl_object_ops *ops = obj_ops(obj);
+	struct nl_object_ops *ops;
+
+	if (!obj)
+		return;
+
+	ops = obj_ops(obj);
 
 	if (obj->ce_refcnt > 0)
 		NL_DBG(1, "Warning: Freeing object in use...\n");
