@@ -184,7 +184,7 @@ static struct nl_handle *__alloc_handle(struct nl_cb *cb)
 	}
 
 	handle->h_fd = -1;
-	handle->h_cb = cb;
+	handle->h_cb = nl_cb_get(cb);
 	handle->h_local.nl_family = AF_NETLINK;
 	handle->h_peer.nl_family = AF_NETLINK;
 	handle->h_seq_expect = handle->h_seq_next = time(0);
@@ -206,14 +206,20 @@ static struct nl_handle *__alloc_handle(struct nl_cb *cb)
 struct nl_handle *nl_handle_alloc(void)
 {
 	struct nl_cb *cb;
-	
+	struct nl_handle *sk;
+
 	cb = nl_cb_alloc(default_cb);
 	if (!cb) {
 		nl_errno(ENOMEM);
 		return NULL;
 	}
 
-	return __alloc_handle(cb);
+	/* will increment cb reference count on success */
+	sk = __alloc_handle(cb);
+
+	nl_cb_put(cb);
+
+	return sk;
 }
 
 /**
@@ -230,7 +236,7 @@ struct nl_handle *nl_handle_alloc_cb(struct nl_cb *cb)
 	if (cb == NULL)
 		BUG();
 
-	return __alloc_handle(nl_cb_get(cb));
+	return __alloc_handle(cb);
 }
 
 /**
@@ -488,6 +494,9 @@ struct nl_cb *nl_socket_get_cb(struct nl_handle *handle)
 
 void nl_socket_set_cb(struct nl_handle *handle, struct nl_cb *cb)
 {
+	if (cb == NULL)
+		BUG();
+
 	nl_cb_put(handle->h_cb);
 	handle->h_cb = nl_cb_get(cb);
 }
